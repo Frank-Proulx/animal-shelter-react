@@ -24,7 +24,8 @@ class AnimalControl extends React.Component {
     ).then((response) => response.json())
     .then((jsonifiedResponse) => {
       this.setState({
-        animalArray: jsonifiedResponse
+        animalArray: jsonifiedResponse,
+        filteredArray: jsonifiedResponse
       })
     })
       .catch((error) => {
@@ -48,11 +49,16 @@ class AnimalControl extends React.Component {
     })
   }
 
-  handleFilter = () => {
-    this.setState({
-      filteredArray: ["working!"]
-    })
-    console.log(this.state.filteredArray)
+handleFilter = (event) => {
+    if (event.target.value === "Any") {
+      this.setState({
+        filteredArray: this.state.animalArray
+      })
+    } else {
+      this.setState({
+        filteredArray: this.state.animalArray.filter((animal) => animal.sex === event.target.value)
+      })
+    }
   }
 
   render() {
@@ -62,7 +68,7 @@ class AnimalControl extends React.Component {
       currentlyVisible = <Main handleSearch={this.handleSearch} />;
       buttonText = "Search Animals"
     } else if (this.state.searchPageShowing) {
-      currentlyVisible = <AnimalList handleFilter={this.state.handleFilter} animalArray={this.state.animalArray} handleDetail={this.handleDetail} />
+      currentlyVisible = <AnimalList handleFilter={this.handleFilter} filteredArray={this.state.filteredArray} animalArray={this.state.animalArray} handleDetail={this.handleDetail} />
       buttonText = "Back to Main"
     } else if (this.state.selectedAnimal !== null) {
       currentlyVisible = <AnimalDetail selectedAnimal={this.state.selectedAnimal} />

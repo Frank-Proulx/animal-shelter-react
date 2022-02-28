@@ -6,14 +6,14 @@ function AnimalList(props) {
       <h2>Animal List</h2>
       <form onChange={props.handleFilter}>
         <select name="sex" id="sex">
-          <option value="any">any</option>
-          <option value="male">male</option>
-          <option value="female">female</option>
+          <option value="Any">Any</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
         </select>
       </form>
-      {props.animalArray.map((animal) => {
+      {props.filteredArray.map((animal, index) => {
         return(
-        <div onClick={()=>props.handleDetail(animal.id)}>
+        <div key={index} onClick={()=>props.handleDetail(animal.id)}>
           {/* bar at the top with filter buttons */}
           {/* display api return */}
           <h3>{animal.name} - {animal.species}</h3>
