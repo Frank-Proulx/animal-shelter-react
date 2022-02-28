@@ -5,7 +5,8 @@ function Main(props) {
     <React.Fragment>
       {/* random animal endpoint */}
       <h2>Main Page</h2>
-      <button onClick={props.handleSearch}></button>
+      <p>Random animal goes here</p>
+
     </React.Fragment>
   );
 }
