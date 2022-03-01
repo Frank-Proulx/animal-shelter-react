@@ -11,6 +11,9 @@ class AnimalControl extends React.Component {
       selectedAnimal: null,
       animalArray: [],
       filteredArray: [],
+      sex: "All",
+      species: "Any",
+      shouldUpdate: false
     };
   }
   
@@ -49,17 +52,68 @@ class AnimalControl extends React.Component {
     })
   }
 
-handleFilter = (event) => {
-    if (event.target.value === "Any") {
+  filterAnimals = () => {
+    const { sex, species } = this.state;
+    if (sex === "All" && species === "Any") {
+      this.setState({filteredArray: this.state.animalArray})
+    } else if (sex !== "All" && species !== "Any"){
       this.setState({
-        filteredArray: this.state.animalArray
+        filteredArray: this.state.animalArray.filter((animal) => animal.sex === sex && animal.species === species)
       })
-    } else {
+    } else if (sex !== "All") {
       this.setState({
-        filteredArray: this.state.animalArray.filter((animal) => animal.sex === event.target.value)
+        filteredArray: this.state.animalArray.filter((animal) => animal.sex === sex)
+      })
+    } else if (species !== "Any") {
+      this.setState({
+        filteredArray: this.state.animalArray.filter((animal) => animal.species === species)
       })
     }
+    this.setState({shouldUpdate: false})
   }
+
+  handleFilter = (event) => {
+    switch(event.target.value) {
+      case "All":
+        this.setState({sex: "All"})
+        break;
+      case "Male":
+        this.setState({sex: "Male"})
+        break;
+      case "Female":
+        this.setState({sex: "Female"})
+        break;
+      case "Any":
+        this.setState({species: "Any"})
+        break;
+      case "Dog":
+        this.setState({species: "Dog"})
+        break;
+      case "Cat":
+        this.setState({species: "Cat"})
+        break;
+      case "Other":
+        this.setState({species: "Other"})
+        break;
+    }
+    this.setState({shouldUpdate: true})
+  }
+
+  // handleSpeciesFilter = (event) => {
+  //   if (event.target.value === "Any") {
+  //     this.setState({
+  //       filteredArray: this.state.filteredArray
+  //     })
+  //   } else if (event.target.value === "Other") {
+  //     this.setState({
+  //       filteredArray: this.state.filteredArray.filter((animal) => animal.species !== "Cat" && animal.species !== "Dog")
+  //     })
+  //   } else {
+  //     this.setState({
+  //       filteredArray: this.state.filteredArray.filter((animal) => animal.species === event.target.value)
+  //     })
+  //   }
+  // }
 
   render() {
     let currentlyVisible = null;
@@ -68,7 +122,7 @@ handleFilter = (event) => {
       currentlyVisible = <Main handleSearch={this.handleSearch} />;
       buttonText = "Search Animals"
     } else if (this.state.searchPageShowing) {
-      currentlyVisible = <AnimalList makeApiCall={this.makeApiCall} handleFilter={this.handleFilter} filteredArray={this.state.filteredArray} animalArray={this.state.animalArray} handleDetail={this.handleDetail} />
+      currentlyVisible = <AnimalList makeApiCall={this.makeApiCall} shouldUpdate={this.state.shouldUpdate} handleFilter={this.handleFilter} filteredArray={this.state.filteredArray} animalArray={this.state.animalArray} handleDetail={this.handleDetail} filterAnimals={this.filterAnimals} />
       buttonText = "Back to Main"
     } else if (this.state.selectedAnimal !== null) {
       currentlyVisible = <AnimalDetail selectedAnimal={this.state.selectedAnimal} />
