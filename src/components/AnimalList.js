@@ -11,6 +11,7 @@ function AnimalList(props) {
           <option value="Female">Female</option>
         </select>
       </form>
+      <button onClick={props.makeApiCall}>Reset Filters</button>
       {props.filteredArray.map((animal, index) => {
         return(
         <div key={index} onClick={()=>props.handleDetail(animal.id)}>

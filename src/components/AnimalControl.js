@@ -68,7 +68,7 @@ handleFilter = (event) => {
       currentlyVisible = <Main handleSearch={this.handleSearch} />;
       buttonText = "Search Animals"
     } else if (this.state.searchPageShowing) {
-      currentlyVisible = <AnimalList handleFilter={this.handleFilter} filteredArray={this.state.filteredArray} animalArray={this.state.animalArray} handleDetail={this.handleDetail} />
+      currentlyVisible = <AnimalList makeApiCall={this.makeApiCall} handleFilter={this.handleFilter} filteredArray={this.state.filteredArray} animalArray={this.state.animalArray} handleDetail={this.handleDetail} />
       buttonText = "Back to Main"
     } else if (this.state.selectedAnimal !== null) {
       currentlyVisible = <AnimalDetail selectedAnimal={this.state.selectedAnimal} />
