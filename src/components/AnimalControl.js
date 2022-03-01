@@ -10,11 +10,12 @@ class AnimalControl extends React.Component {
       searchPageShowing: false,
       selectedAnimal: null,
       animalArray: [],
-      filteredArray: [],
+      filteredArray: null,
       sex: "All",
       species: "Any",
       breed: "All Breeds",
-      shouldUpdate: false
+      shouldUpdate: false,
+      resultsMessage: null,
     };
   }
   
@@ -30,7 +31,7 @@ class AnimalControl extends React.Component {
     .then((jsonifiedResponse) => {
       this.setState({
         animalArray: jsonifiedResponse,
-        filteredArray: jsonifiedResponse
+        filteredArray: this.state.filteredArray || jsonifiedResponse
       })
     })
       .catch((error) => {
@@ -44,6 +45,7 @@ class AnimalControl extends React.Component {
     this.setState({
       selectedAnimal: null,
       searchPageShowing: !this.state.searchPageShowing,
+      resultsMessage: null
     })
   }
 
@@ -65,21 +67,29 @@ class AnimalControl extends React.Component {
         && animal.species === species 
         && animal.breed === breed)
       })
-    // } else if (sex === "All" && species !== "Any" && breed !== "All Breeds") {
-    //   this.setState({
-    //     filteredArray: this.state.animalArray.filter((animal) => animal.breed === breed)
-    //   })
-    } else if (sex === "All" && ((breed !== "All Breeds" && species !== "Any") || (breed !== "All Breeds" && species === "Any"))) {
-      this.setState({
-        filteredArray: this.state.animalArray.filter((animal) => (animal.breed === breed))
-      })  
     } else if (sex !== "All" && species === "Any" && breed === "All Breeds") {
       this.setState({
         filteredArray: this.state.animalArray.filter((animal) => animal.sex === sex)
       })
     } else if (sex !== "All" && species !== "Any" && breed === "All Breeds") {
       this.setState({
-        filteredArray: this.state.animalArray.filter((animal) => animal.sex === sex && (animal.breed === breed || animal.species === species))
+        filteredArray: this.state.animalArray.filter((animal) => animal.sex === sex && animal.species === species)
+      })
+    } else if (sex !== "All" && species === "Any" && breed !== "All Breeds") {
+      this.setState({
+        filteredArray: this.state.animalArray.filter((animal) => animal.sex === sex && animal.breed === breed)
+      })
+    } else if (breed !== "All Breeds" && species === "Any" && sex === "All") {
+      this.setState({
+        filteredArray: this.state.animalArray.filter((animal) => animal.breed === breed)
+      })
+    } else if (breed !== "All Breeds" && species !== "Any" && sex === "All") {
+      this.setState({
+        filteredArray: this.state.animalArray.filter((animal) => animal.breed === breed && animal.species === species)
+      })
+    } else if (species !== "Any" && breed === "All Breeds" && sex === "All") {
+      this.setState({
+        filteredArray: this.state.animalArray.filter((animal) => animal.species === species)
       })
     }
     this.setState({shouldUpdate: false})
@@ -123,6 +133,43 @@ class AnimalControl extends React.Component {
     this.setState({shouldUpdate: true})
   }
 
+  resetFilters = () => {
+    this.setState({
+      sex: "All",
+      breed: "All Breeds",
+      species: "Any",
+      filteredArray: this.state.animalArray
+    })
+  }
+
+  componentDidUpdate() {
+    console.log("I did update")
+    if (this.state.shouldUpdate === true) {
+      this.filterAnimals();
+    }
+  }
+
+  deleteAnimalCall = (id) => {
+    fetch(
+      `http://localhost:3000/api/v1/animals/${id}`, {method: 'DELETE'}
+    ).then((response) => response.json())
+    .then((jsonifiedResponse) => {
+      this.setState({
+        resultsMessage: jsonifiedResponse.message
+      })
+    })
+      .catch((error) => {
+        this.setState({
+          error
+      })
+    })
+    this.setState({
+      animalArray: this.state.animalArray.filter(animal => animal.id !== id),
+      filteredArray: this.state.filteredArray.filter(animal => animal.id !== id)
+    })
+    this.makeApiCall();
+  }
+
   render() {
     let currentlyVisible = null;
     let buttonText;
@@ -131,19 +178,24 @@ class AnimalControl extends React.Component {
       buttonText = "Search Animals"
     } else if (this.state.searchPageShowing) {
       currentlyVisible = <AnimalList 
-        makeApiCall={this.makeApiCall} 
+        resetFilters={this.resetFilters}
         shouldUpdate={this.state.shouldUpdate} 
         handleSpecies={this.handleSpecies} 
         handleSex={this.handleSex} 
         handleBreed={this.handleBreed} 
         filteredArray={this.state.filteredArray} 
         handleDetail={this.handleDetail} 
-        filterAnimals={this.filterAnimals} 
         animalArray={this.state.animalArray}
+        sex={this.state.sex}
+        species={this.state.species}
+        breed={this.state.breed}
       />
       buttonText = "Back to Main"
     } else if (this.state.selectedAnimal !== null) {
-      currentlyVisible = <AnimalDetail selectedAnimal={this.state.selectedAnimal} />
+      currentlyVisible = <AnimalDetail 
+        selectedAnimal={this.state.selectedAnimal} 
+        resultsMessage={this.state.resultsMessage} 
+        deleteAnimalCall={this.deleteAnimalCall} />
       buttonText = "Back to List"
     } else {
       currentlyVisible = <h1>Something went wrong</h1>

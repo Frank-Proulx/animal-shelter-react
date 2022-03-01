@@ -1,21 +1,19 @@
 import React from "react";
 
 function AnimalList(props) {
-  if (props.shouldUpdate === true) {
-    props.filterAnimals();
-  }
+  const {sex, species, breed} = props;
   return (
     <React.Fragment>
       <h2>Animal List</h2>
       <form onChange={props.handleSex}>
-        <select name="sex" id="sex">
+        <select name="sex" id="sex" value={sex}>
           <option value="All">All</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
         </select>
       </form>
       <form onChange={props.handleSpecies}>
-        <select name="species" id="species">
+        <select name="species" id="species" value={species}>
           <option value="Any">Any</option>
           <option value="Cat">Cat</option>
           <option value="Dog">Dog</option>
@@ -23,14 +21,14 @@ function AnimalList(props) {
         </select>
       </form>
       <form onChange={props.handleBreed}>
-        <select>
+        <select value={breed}>
           <option value="All Breeds">All Breeds</option>
           {props.animalArray.map((animal, index) => 
             <option value={animal.breed} key={index}>{animal.breed}</option>
           )}
         </select>
       </form>
-      <button onClick={props.makeApiCall}>Reset Filters</button>
+      <button onClick={props.resetFilters}>Reset Filters</button>
       {props.filteredArray.map((animal, index) => {
         return(
         <div key={index} onClick={()=>props.handleDetail(animal.id)}>
