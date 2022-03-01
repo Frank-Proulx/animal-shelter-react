@@ -7,19 +7,27 @@ function AnimalList(props) {
   return (
     <React.Fragment>
       <h2>Animal List</h2>
-      <form onChange={props.handleFilter}>
+      <form onChange={props.handleSex}>
         <select name="sex" id="sex">
           <option value="All">All</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
         </select>
-      {/* </form>
-      <form onChange={props.handleSpeciesFilter}> */}
+      </form>
+      <form onChange={props.handleSpecies}>
         <select name="species" id="species">
           <option value="Any">Any</option>
           <option value="Cat">Cat</option>
           <option value="Dog">Dog</option>
           <option value="Other">Other</option>
+        </select>
+      </form>
+      <form onChange={props.handleBreed}>
+        <select>
+          <option value="All Breeds">All Breeds</option>
+          {props.animalArray.map((animal, index) => 
+            <option value={animal.breed} key={index}>{animal.breed}</option>
+          )}
         </select>
       </form>
       <button onClick={props.makeApiCall}>Reset Filters</button>
@@ -29,6 +37,7 @@ function AnimalList(props) {
           {/* bar at the top with filter buttons */}
           {/* display api return */}
           <h3>{animal.name} - {animal.species}</h3>
+          <p>{animal.breed}</p>
           <p>{animal.species}, {animal.age} years old</p>
           <p>{animal.sex}</p>
         </div>)
