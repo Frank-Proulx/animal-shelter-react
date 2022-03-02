@@ -9,7 +9,7 @@ function ReusableForm(props) {
         <input type="text" name="breed" placeholder="breed" defaultValue={props.selectedAnimal.breed} />
         <input type="text" name="species" placeholder="species" defaultValue={props.selectedAnimal.species} />
         <input type="number" name="age" placeholder="age" defaultValue={props.selectedAnimal.age} />
-        <button type="submit">{props.buttonText}</button>
+        <button className="btn btn-primary" type="submit">{props.buttonText}</button>
       </form>
     </React.Fragment>
   ) : (
@@ -20,7 +20,7 @@ function ReusableForm(props) {
         <input type="text" name="breed" placeholder="breed" />
         <input type="text" name="species" placeholder="species" />
         <input type="number" name="age" placeholder="age" />
-        <button type="submit">{props.buttonText}</button>
+        <button className="btn btn-primary" type="submit">{props.buttonText}</button>
       </form>
     </React.Fragment>
   )

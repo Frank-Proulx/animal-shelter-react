@@ -174,9 +174,9 @@ class AnimalControl extends React.Component {
     })
     this.setState({
       animalArray: this.state.animalArray.filter(animal => animal.id !== id),
-      filteredArray: this.state.filteredArray.filter(animal => animal.id !== id)
+      filteredArray: this.state.filteredArray.filter(animal => animal.id !== id),
+      shouldUpdate: true
     })
-    this.makeApiCall();
   }
 
   editAnimalCall = (animal) => {
@@ -296,8 +296,8 @@ class AnimalControl extends React.Component {
     }
     return(
       <React.Fragment>
+        <button className="btn btn-primary" onClick={this.handleSearch}>{buttonText}</button>  
         {currentlyVisible}
-        <button onClick={this.handleSearch}>{buttonText}</button>  
       </React.Fragment>
     );
   }

@@ -3,10 +3,17 @@ import Header from './Header';
 import AnimalControl from './AnimalControl';
 
 function App() {
+
+  const bodyStyle = {
+    // backgroundColor: "darkgrey"
+  }
+
   return (
     <React.Fragment>
-      <Header />
-      <AnimalControl />
+      <div className="container" style={bodyStyle}>
+        <Header />
+        <AnimalControl />
+      </div>
     </React.Fragment>
   );
 }
