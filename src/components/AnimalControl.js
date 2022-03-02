@@ -16,6 +16,7 @@ class AnimalControl extends React.Component {
       breed: "All Breeds",
       shouldUpdate: false,
       resultsMessage: null,
+      editFormVisible: false
     };
   }
   
@@ -170,10 +171,16 @@ class AnimalControl extends React.Component {
     this.makeApiCall();
   }
 
+  editAnimalCall(animal) {
+
+  }
+
   render() {
     let currentlyVisible = null;
     let buttonText;
-    if (!this.state.searchPageShowing && this.state.selectedAnimal === null) {
+    if (this.state.editFormVisible) {
+      currentlyVisible = <EditForm editAnimalCall={this.editAnimalCall} selectedAnimal={this.state.selectedAnimal} />
+    } else if (!this.state.searchPageShowing && this.state.selectedAnimal === null) {
       currentlyVisible = <Main handleSearch={this.handleSearch} />;
       buttonText = "Search Animals"
     } else if (this.state.searchPageShowing) {
