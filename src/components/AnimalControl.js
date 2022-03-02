@@ -2,6 +2,7 @@ import React from 'react';
 import Main from './Main';
 import AnimalList from './AnimalList';
 import AnimalDetail from './AnimalDetail';
+import EditForm from './EditForm';
 
 class AnimalControl extends React.Component {
   constructor(props) {
@@ -46,7 +47,8 @@ class AnimalControl extends React.Component {
     this.setState({
       selectedAnimal: null,
       searchPageShowing: !this.state.searchPageShowing,
-      resultsMessage: null
+      resultsMessage: null,
+      editFormVisible: false
     })
   }
 
@@ -171,15 +173,42 @@ class AnimalControl extends React.Component {
     this.makeApiCall();
   }
 
-  editAnimalCall(animal) {
+  editAnimalCall = (animal) => {
+    const { id, sex, breed, name, species, age } = animal
+    fetch(
+      `http://localhost:3000/api/v1/animals/${id}?age=${age}&sex=${sex}&breed=${breed}&species=${species}&name=${name}`, {method: 'PUT'}
+    ).then((response) => response.json())
+    .then((jsonifiedResponse) => {
+      this.setState({
+        resultsMessage: jsonifiedResponse.message
+      })
+    })
+      .catch((error) => {
+        this.setState({
+          error
+      })
+    })
+    this.makeApiCall();
+    this.setState({
+      filteredArray: this.state.animalArray
+    })
+    this.toggleEditForm();
+  }
 
+  toggleEditForm = () => {
+    this.setState({
+      editFormVisible: !this.state.editFormVisible
+    })
   }
 
   render() {
     let currentlyVisible = null;
     let buttonText;
     if (this.state.editFormVisible) {
-      currentlyVisible = <EditForm editAnimalCall={this.editAnimalCall} selectedAnimal={this.state.selectedAnimal} />
+      currentlyVisible = <EditForm 
+        editAnimalCall={this.editAnimalCall} 
+        selectedAnimal={this.state.selectedAnimal} />
+      buttonText="Back to list"
     } else if (!this.state.searchPageShowing && this.state.selectedAnimal === null) {
       currentlyVisible = <Main handleSearch={this.handleSearch} />;
       buttonText = "Search Animals"
@@ -202,7 +231,8 @@ class AnimalControl extends React.Component {
       currentlyVisible = <AnimalDetail 
         selectedAnimal={this.state.selectedAnimal} 
         resultsMessage={this.state.resultsMessage} 
-        deleteAnimalCall={this.deleteAnimalCall} />
+        deleteAnimalCall={this.deleteAnimalCall}
+        toggleEditForm={this.toggleEditForm} />
       buttonText = "Back to List"
     } else {
       currentlyVisible = <h1>Something went wrong</h1>
