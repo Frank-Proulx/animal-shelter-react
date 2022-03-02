@@ -19,12 +19,14 @@ class AnimalControl extends React.Component {
       shouldUpdate: false,
       resultsMessage: null,
       editFormVisible: false,
-      newFormVisible: false
+      newFormVisible: false,
+      randomAnimal: null
     };
   }
   
   componentDidMount() {
-    this.makeApiCall()
+    this.makeApiCall();
+    this.randomApiCall();
     console.log("I made a call");
   }
 
@@ -233,6 +235,22 @@ class AnimalControl extends React.Component {
     })
   }
 
+  randomApiCall = () => {
+    fetch(
+      `http://localhost:3000/api/v1/animals/random`
+    ).then((response) => response.json())
+    .then((jsonifiedResponse) => {
+      this.setState({
+        randomAnimal: jsonifiedResponse
+      })
+    })
+      .catch((error) => {
+        this.setState({
+          error
+      })
+    })
+  }
+
   render() {
     let currentlyVisible = null;
     let buttonText;
@@ -242,10 +260,12 @@ class AnimalControl extends React.Component {
         selectedAnimal={this.state.selectedAnimal} />
       buttonText="Back to list"
     } else if (this.state.newFormVisible) {
-      currentlyVisible = <NewAnimalForm newAnimalCall={this.newAnimalCall} />
+      currentlyVisible = <NewAnimalForm 
+      newAnimalCall={this.newAnimalCall} />
       buttonText="See animal list"
     } else if (!this.state.searchPageShowing && this.state.selectedAnimal === null) {
       currentlyVisible = <Main 
+        randomAnimal={this.state.randomAnimal}
         handleSearch={this.handleSearch} 
         toggleNewForm={this.toggleNewForm} />;
       buttonText = "Search Animals"
