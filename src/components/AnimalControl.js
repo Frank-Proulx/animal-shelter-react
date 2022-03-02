@@ -3,6 +3,7 @@ import Main from './Main';
 import AnimalList from './AnimalList';
 import AnimalDetail from './AnimalDetail';
 import EditForm from './EditForm';
+import NewAnimalForm from './NewAnimalForm';
 
 class AnimalControl extends React.Component {
   constructor(props) {
@@ -17,7 +18,8 @@ class AnimalControl extends React.Component {
       breed: "All Breeds",
       shouldUpdate: false,
       resultsMessage: null,
-      editFormVisible: false
+      editFormVisible: false,
+      newFormVisible: false
     };
   }
   
@@ -48,7 +50,9 @@ class AnimalControl extends React.Component {
       selectedAnimal: null,
       searchPageShowing: !this.state.searchPageShowing,
       resultsMessage: null,
-      editFormVisible: false
+      editFormVisible: false,
+      shouldUpdate: true,
+      newFormVisible: false
     })
   }
 
@@ -190,14 +194,42 @@ class AnimalControl extends React.Component {
     })
     this.makeApiCall();
     this.setState({
-      filteredArray: this.state.animalArray
+      filteredArray: this.state.animalArray,
     })
     this.toggleEditForm();
+  }
+
+  newAnimalCall = (animal) => {
+    const { sex, breed, name, species, age } = animal
+    fetch(
+      `http://localhost:3000/api/v1/animals?age=${age}&sex=${sex}&breed=${breed}&species=${species}&name=${name}`, {method: 'POST'}
+    ).then((response) => response.json())
+    .then((jsonifiedResponse) => {
+      this.setState({
+        selectedAnimal: jsonifiedResponse
+      })
+    })
+      .catch((error) => {
+        this.setState({
+          error
+      })
+    })
+    this.makeApiCall();
+    this.setState({
+      filteredArray: this.state.animalArray,
+    })
+    this.toggleNewForm();
   }
 
   toggleEditForm = () => {
     this.setState({
       editFormVisible: !this.state.editFormVisible
+    })
+  }
+
+  toggleNewForm = () => {
+    this.setState({
+      newFormVisible: !this.state.newFormVisible
     })
   }
 
@@ -209,8 +241,13 @@ class AnimalControl extends React.Component {
         editAnimalCall={this.editAnimalCall} 
         selectedAnimal={this.state.selectedAnimal} />
       buttonText="Back to list"
+    } else if (this.state.newFormVisible) {
+      currentlyVisible = <NewAnimalForm newAnimalCall={this.newAnimalCall} />
+      buttonText="See animal list"
     } else if (!this.state.searchPageShowing && this.state.selectedAnimal === null) {
-      currentlyVisible = <Main handleSearch={this.handleSearch} />;
+      currentlyVisible = <Main 
+        handleSearch={this.handleSearch} 
+        toggleNewForm={this.toggleNewForm} />;
       buttonText = "Search Animals"
     } else if (this.state.searchPageShowing) {
       currentlyVisible = <AnimalList 
