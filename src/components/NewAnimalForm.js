@@ -11,6 +11,7 @@ function NewAnimalForm(props) {
       breed: event.target.breed.value,
       species: event.target.species.value,
       age: event.target.age.value,
+      url: event.target.image_path.value
     }
     props.newAnimalCall(animal);
   }

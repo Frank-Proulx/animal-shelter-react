@@ -48,8 +48,8 @@ function AnimalList(props) {
         <form style={listStyle.dropdown} onChange={props.handleBreed}>
           <select style={listStyle.select} value={breed}>
             <option value="All Breeds">All Breeds</option>
-            {props.animalArray.map((animal, index) => 
-              <option value={animal.breed} key={index}>{animal.breed}</option>
+            {props.breedArray.map((breed, index) => 
+              <option value={breed} key={index}>{breed}</option>
             )}
           </select>
         </form>
@@ -69,12 +69,3 @@ function AnimalList(props) {
 }
 
 export default AnimalList;
-
-{/* <form onSubmit={this.handleSubmit}>
-<select name="regionList" id="regionList">
-{this.state.regions.map((region, index) =>
-  <option value={region.id} key={index}>{region.name}</option>
-  )}
-</select>
-<button className="btn btn-primary" type="submit">Search</button>
-</form> */}

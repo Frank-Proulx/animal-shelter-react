@@ -9,7 +9,7 @@ function AnimalDetail(props) {
       :
     <React.Fragment>
       <h2>{selectedAnimal.name}</h2>
-      <img src="https://cataas.com/cat/cute" width="400" />
+      <img src={selectedAnimal.url} width="400" />
       <p>{selectedAnimal.name} is a {selectedAnimal.age} year old {selectedAnimal.sex} {selectedAnimal.breed} {selectedAnimal.species}.</p>
       <button className="btn btn-primary" onClick={props.toggleEditForm}>Update this pet</button>
       <button className="btn btn-primary" onClick={()=>props.deleteAnimalCall(selectedAnimal.id)}>Delete this pet</button>

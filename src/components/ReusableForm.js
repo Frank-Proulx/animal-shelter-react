@@ -5,6 +5,7 @@ function ReusableForm(props) {
     <React.Fragment>
       <form onSubmit={props.formSubmissionHandler}>
         <input type="text" name="name" placeholder="Animal name" defaultValue={props.selectedAnimal.name} />
+        <input type="text" name="image_path" placeholder="Image Path URL" defaultValue={props.selectedAnimal.url} />
         <input type="text" name="sex" placeholder="sex" defaultValue={props.selectedAnimal.sex} />
         <input type="text" name="breed" placeholder="breed" defaultValue={props.selectedAnimal.breed} />
         <input type="text" name="species" placeholder="species" defaultValue={props.selectedAnimal.species} />
@@ -16,6 +17,7 @@ function ReusableForm(props) {
     <React.Fragment>
       <form onSubmit={props.formSubmissionHandler}>
         <input type="text" name="name" placeholder="Animal name" />
+        <input type="text" name="image_path" placeholder="Image Path URL" />
         <input type="text" name="sex" placeholder="sex" />
         <input type="text" name="breed" placeholder="breed" />
         <input type="text" name="species" placeholder="species" />

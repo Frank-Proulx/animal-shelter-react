@@ -20,7 +20,8 @@ class AnimalControl extends React.Component {
       resultsMessage: null,
       editFormVisible: false,
       newFormVisible: false,
-      randomAnimal: null
+      randomAnimal: null,
+      breedArray: []
     };
   }
   
@@ -35,8 +36,22 @@ class AnimalControl extends React.Component {
       `http://localhost:3000/api/v1/animals`
     ).then((response) => response.json())
     .then((jsonifiedResponse) => {
+      let breedNames = jsonifiedResponse.map(object => {
+        return object.breed;
+      });
       this.setState({
-        animalArray: jsonifiedResponse,
+        animalArray: jsonifiedResponse.sort((a,b) => {
+          let nameA = a.name.toUpperCase();
+          let nameB = b.name.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          } else if (nameA > nameB) {
+            return 1;
+          } else {
+            return 0;
+          }
+        }),
+        breedArray: [...(new Set(breedNames.sort()))],
         filteredArray: this.state.filteredArray || jsonifiedResponse
       })
     })
@@ -180,9 +195,9 @@ class AnimalControl extends React.Component {
   }
 
   editAnimalCall = (animal) => {
-    const { id, sex, breed, name, species, age } = animal
+    const { id, sex, breed, name, species, age, url } = animal
     fetch(
-      `http://localhost:3000/api/v1/animals/${id}?age=${age}&sex=${sex}&breed=${breed}&species=${species}&name=${name}`, {method: 'PUT'}
+      `http://localhost:3000/api/v1/animals/${id}?age=${age}&sex=${sex}&breed=${breed}&species=${species}&name=${name}&url=${url}`, {method: 'PUT'}
     ).then((response) => response.json())
     .then((jsonifiedResponse) => {
       this.setState({
@@ -202,9 +217,9 @@ class AnimalControl extends React.Component {
   }
 
   newAnimalCall = (animal) => {
-    const { sex, breed, name, species, age } = animal
+    const { url, sex, breed, name, species, age } = animal
     fetch(
-      `http://localhost:3000/api/v1/animals?age=${age}&sex=${sex}&breed=${breed}&species=${species}&name=${name}`, {method: 'POST'}
+      `http://localhost:3000/api/v1/animals?age=${age}&sex=${sex}&breed=${breed}&species=${species}&name=${name}&url=${url}`, {method: 'POST'}
     ).then((response) => response.json())
     .then((jsonifiedResponse) => {
       this.setState({
@@ -282,6 +297,7 @@ class AnimalControl extends React.Component {
         sex={this.state.sex}
         species={this.state.species}
         breed={this.state.breed}
+        breedArray={this.state.breedArray}
       />
       buttonText = "Back to Main"
     } else if (this.state.selectedAnimal !== null) {

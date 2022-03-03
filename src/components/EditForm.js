@@ -11,7 +11,8 @@ function EditForm(props) {
       breed: event.target.breed.value,
       species: event.target.species.value,
       age: event.target.age.value,
-      id: props.selectedAnimal.id
+      id: props.selectedAnimal.id,
+      url: event.target.image_path.value
     }
     props.editAnimalCall(animal);
   }
